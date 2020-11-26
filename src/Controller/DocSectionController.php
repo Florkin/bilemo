@@ -27,7 +27,6 @@ class DocSectionController extends AbstractController
      */
     public function __construct(EntityFormHandler $formHandler)
     {
-
         $this->formHandler = $formHandler;
     }
 
