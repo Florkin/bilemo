@@ -62,17 +62,17 @@ class DocSectionController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}", name="doc_section_show", methods={"GET"})
-     * @param DocSection $docSection
-     * @return Response
-     */
-    public function show(DocSection $docSection): Response
-    {
-        return $this->render('doc_section/show.html.twig', [
-            'doc_section' => $docSection,
-        ]);
-    }
+//    /**
+//     * @Route("/{id}", name="doc_section_show", methods={"GET"})
+//     * @param DocSection $docSection
+//     * @return Response
+//     */
+//    public function show(DocSection $docSection): Response
+//    {
+//        return $this->render('doc_section/show.html.twig', [
+//            'doc_section' => $docSection,
+//        ]);
+//    }
 
     /**
      * @Route("/{id}/edit", name="doc_section_edit", methods={"GET","POST"})
