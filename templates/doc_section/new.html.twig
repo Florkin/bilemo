@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New DocSection{% endblock %}
+
+{% block body %}
+    <h1>Create new DocSection</h1>
+
+    {{ include('doc_section/_form.html.twig') }}
+
+    <a href="{{ path('doc_section_index') }}">back to list</a>
+{% endblock %}

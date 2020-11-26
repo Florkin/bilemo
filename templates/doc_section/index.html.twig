@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DocSection index{% endblock %}
+
+{% block body %}
+    <h1>DocSection index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>DateAdd</th>
+                <th>DateUpdate</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for doc_section in doc_sections %}
+            <tr>
+                <td>{{ doc_section.id }}</td>
+                <td>{{ doc_section.title }}</td>
+                <td>{{ doc_section.dateAdd ? doc_section.dateAdd|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ doc_section.dateUpdate ? doc_section.dateUpdate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('doc_section_show', {'id': doc_section.id}) }}">show</a>
+                    <a href="{{ path('doc_section_edit', {'id': doc_section.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('doc_section_new') }}">Create new</a>
+{% endblock %}

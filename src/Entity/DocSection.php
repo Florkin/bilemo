@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\DocSectionRepository;
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,6 +37,11 @@ class DocSection
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateUpdate;
+
+    public function __construct()
+    {
+        $this->dateAdd = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -88,5 +94,10 @@ class DocSection
         $this->dateUpdate = $dateUpdate;
 
         return $this;
+    }
+
+    public function getSlug(): string
+    {
+        return (new Slugify())->slugify($this->title);
     }
 }
