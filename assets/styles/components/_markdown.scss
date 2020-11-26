@@ -1,0 +1,15 @@
+.markdown-card-content {
+  max-height: 300px;
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+
+  &:after {
+    content: '';
+    height: 150px;
+    background: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 1));
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
+}

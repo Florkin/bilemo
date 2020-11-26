@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>{% block title %}Welcome!{% endblock %}</title>
+	<title>{% block title %}{% endblock %}</title>
 	{{ encore_entry_link_tags('app') }}
 	{% block stylesheets %}{% endblock %}
 </head>
@@ -10,7 +10,14 @@
 {% block flashes %}
 	{% include "_partials/flashes.html.twig" %}
 {% endblock %}
-{% block body %}{% endblock %}
+{% block navbar %}
+	{% include "_partials/navbar/navbar.html.twig" %}
+{% endblock %}
+
+<div class="container">
+	{% block body %}{% endblock %}
+</div>
+
 {{ encore_entry_script_tags('app') }}
 {% block scripts %}{% endblock %}
 </body>

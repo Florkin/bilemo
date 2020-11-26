@@ -1,40 +1,44 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}DocSection index{% endblock %}
+{% block title %}Documentation{% endblock %}
 
 {% block body %}
-    <h1>DocSection index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Content</th>
-                <th>DateAdd</th>
-                <th>DateUpdate</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for doc_section in doc_sections %}
-            <tr>
-                <td>{{ doc_section.id }}</td>
-                <td>{{ doc_section.title }}</td>
-                <td>{{ doc_section.dateAdd ? doc_section.dateAdd|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ doc_section.dateUpdate ? doc_section.dateUpdate|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('doc_section_show', {'id': doc_section.id}) }}">show</a>
-                    <a href="{{ path('doc_section_edit', {'id': doc_section.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('doc_section_new') }}">Create new</a>
+	<h1 class="page-title">Documentation</h1>
+	<a class="btn btn-primary" href="{{ path('doc_section_new') }}">Créer une nouvelle section</a>
+	<hr>
+	<div class="row">
+		{% for doc in doc_sections %}
+			<div class="col-12 mb-3">
+				<div class="card">
+					<div class="card-header">
+						<h2>{{ doc.title }}</h2>
+					</div>
+					<div class="card-body">
+						<div class="markdown-card-content">
+							{{ doc.content|markdown }}
+						</div>
+						<div class="card-actions">
+							<a class="btn btn-success" href="{{ path('doc_section_show', {'id': doc.id}) }}">
+								<span class="fa fa-eye"></span>
+							</a>
+							<a class="btn btn-outline-warning" href="{{ path('doc_section_edit', {'id': doc.id}) }}">
+								<span class="fa fa-edit"></span>
+							</a>
+							<form method="post" class="d-inline-block"
+								  action="{{ path("doc_section_delete", {id: doc.id}) }}"
+								  onsubmit="return confirm('Êtes vous sur de vouloir supprimer cette section?')">
+								<input type="hidden" name="_method" value="DELETE">
+								<input type="hidden" name="_token" value="{{ csrf_token("delete" ~ doc.id) }}">
+								<button type="submit" href="#" class="btn btn-danger">
+									<span class="fa fa-trash"></span>
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% else %}
+		
+		{% endfor %}
+	</div>
 {% endblock %}
