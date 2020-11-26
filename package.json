@@ -16,6 +16,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "bootstrap": "^4.5.3"
+        "bootstrap": "^4.5.3",
+        "markdown": "^0.5.0"
     }
 }
