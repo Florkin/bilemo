@@ -32,6 +32,12 @@ class User
      */
     private $email;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="users")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $Client;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +75,18 @@ class User
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getClient(): ?Client
+    {
+        return $this->Client;
+    }
+
+    public function setClient(?Client $Client): self
+    {
+        $this->Client = $Client;
 
         return $this;
     }
