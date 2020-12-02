@@ -21,7 +21,7 @@
 					<div class="card clickable">
 						<div class="card-header">
 							<div class="row">
-								<div class="col-12{% if not is_granted("EDIT_DOC", doc) %} col-md-8 col-lg-9 col-xl-10{% endif %}">
+								<div class="col-12{% if is_granted("EDIT_DOC", doc) %} col-md-8 col-lg-9 col-xl-10{% endif %}">
 									<h4>{{ doc.title }}</h4>
 								</div>
 								{% if is_granted("EDIT_DOC", doc) %}
