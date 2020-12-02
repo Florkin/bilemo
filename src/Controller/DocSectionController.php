@@ -50,6 +50,7 @@ class DocSectionController extends AbstractController
     public function new(Request $request): Response
     {
         $docSection = new DocSection();
+        $this->denyAccessUnlessGranted('EDIT_DOC', $docSection);
 
         if ($this->formHandler->handle($request, $docSection, DocSectionType::class)) {
             $this->addFlash("success", "La section " . $docSection->getTitle() . " a bien été ajoutée");
@@ -82,6 +83,8 @@ class DocSectionController extends AbstractController
      */
     public function edit(Request $request, DocSection $docSection): Response
     {
+        $this->denyAccessUnlessGranted('EDIT_DOC', $docSection);
+
         if ($this->formHandler->handle($request, $docSection, DocSectionType::class)) {
             $this->addFlash("success", "La section " . $docSection->getTitle() . " a bien été modifiée");
             return $this->redirectToRoute("doc_section_index");
@@ -101,6 +104,8 @@ class DocSectionController extends AbstractController
      */
     public function delete(Request $request, DocSection $docSection): Response
     {
+        $this->denyAccessUnlessGranted('EDIT_DOC', $docSection);
+
         if ($this->isCsrfTokenValid('delete'.$docSection->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($docSection);

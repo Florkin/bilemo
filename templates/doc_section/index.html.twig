@@ -10,40 +10,45 @@
 		</div>
 	</div>
 	<div class="container">
-		<a class="btn btn-primary" href="{{ path('doc_section_new') }}">Créer une nouvelle section</a>
+		{% if is_granted("EDIT_DOC", doc_sections[0]) %}
+			<a class="btn btn-primary" href="{{ path('doc_section_new') }}">Créer une nouvelle section</a>
 		<hr>
+		{% endif %}
+		
 		<div class="row">
 			{% for doc in doc_sections %}
 				<div class="col-12 mb-3">
 					<div class="card clickable">
 						<div class="card-header">
 							<div class="row">
-								<div class="col-12 col-md-8 col-lg-9 col-xl-10">
+								<div class="col-12{% if not is_granted("EDIT_DOC", doc) %} col-md-8 col-lg-9 col-xl-10{% endif %}">
 									<h4>{{ doc.title }}</h4>
 								</div>
-								<div class="col-12 col-md-4 col-lg-3 col-xl-2 d-flex justify-content-end">
-									<div class="card-actions">
-										<a class="btn btn-success" data-toggle="collapse"
-										   href="#collapsible-content-{{ loop.index }}" role="button"
-										   aria-expanded="false">
-											<span class="fa fa-eye"></span>
-										</a>
-										<a class="btn btn-outline-warning"
-										   href="{{ path('doc_section_edit', {'id': doc.id}) }}">
-											<span class="fa fa-edit"></span>
-										</a>
-										<form method="post" class="d-inline-block"
-											  action="{{ path("doc_section_delete", {id: doc.id}) }}"
-											  onsubmit="return confirm('Êtes vous sur de vouloir supprimer cette section?')">
-											<input type="hidden" name="_method" value="DELETE">
-											<input type="hidden" name="_token"
-												   value="{{ csrf_token("delete" ~ doc.id) }}">
-											<button type="submit" href="#" class="btn btn-danger">
-												<span class="fa fa-trash"></span>
-											</button>
-										</form>
+								{% if is_granted("EDIT_DOC", doc) %}
+									<div class="col-12 col-md-4 col-lg-3 col-xl-2 d-flex justify-content-end">
+										<div class="card-actions">
+											<a class="btn btn-success" data-toggle="collapse"
+											   href="#collapsible-content-{{ loop.index }}" role="button"
+											   aria-expanded="false">
+												<span class="fa fa-eye"></span>
+											</a>
+											<a class="btn btn-outline-warning"
+											   href="{{ path('doc_section_edit', {'id': doc.id}) }}">
+												<span class="fa fa-edit"></span>
+											</a>
+											<form method="post" class="d-inline-block"
+												  action="{{ path("doc_section_delete", {id: doc.id}) }}"
+												  onsubmit="return confirm('Êtes vous sur de vouloir supprimer cette section?')">
+												<input type="hidden" name="_method" value="DELETE">
+												<input type="hidden" name="_token"
+													   value="{{ csrf_token("delete" ~ doc.id) }}">
+												<button type="submit" href="#" class="btn btn-danger">
+													<span class="fa fa-trash"></span>
+												</button>
+											</form>
+										</div>
 									</div>
-								</div>
+								{% endif %}
 							</div>
 						</div>
 						

@@ -13,5 +13,38 @@
 				<a class="nav-link" href="{{ path('doc_section_index') }}">Documentation</a>
 			</li>
 		</ul>
+		
+		<ul class="navbar-nav right-nav">
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+				   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					{% if app.user.username is defined %}
+						<span class="fa fa-user"></span>
+						<span class="d-inline ml-2">{{ app.user.username }}</span>
+					{% else %}
+						<span class="fa fa-user"></span>
+						<span class="d-inline d-lg-none ml-2">Utilisateur</span>
+					{% endif %}
+				
+				</a>
+				<div class="dropdown-menu user-dropdown" aria-labelledby="navbarDropdown">
+					{% if app.user.username is defined %}
+						<a class="dropdown-item" href="{{ path("app_logout") }}"><span
+									class="fa fa-sign-out"></span>
+							Logout
+						</a>
+					{% else %}
+						<a class="dropdown-item{% if current_menu is defined and current_menu == "app_login" %} active{% endif %}"
+						   href="{{ path("app_login") }}">
+							<span class="fa fa-sign-in"></span>
+							Se connecter
+						</a>
+						{#						<a class="dropdown-item{% if current_menu is defined and current_menu == "app_register" %} active{% endif %}"#}
+						{#						   href="{{ path("app_register") }}"><span class="fa fa-user-plus"></span>#}
+						{#							S'inscrire</a>#}
+					{% endif %}
+				</div>
+			</li>
+		</ul>
 	</div>
 </nav>
