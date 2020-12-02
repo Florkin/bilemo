@@ -1,8 +1,12 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+<div class="container">
+	{{ form_start(form) }}
+	{{ form_widget(form) }}
+	<button class="btn btn-success">
+		<span class="fa fa-save"></span> {{ button_label|default('Sauvegarder') }}</button>
+	{{ form_end(form) }}
+</div>
+
 
 {% block scripts %}
-    {{ encore_entry_script_tags('markdownEditor') }}
+	{{ encore_entry_script_tags('markdownEditor') }}
 {% endblock %}

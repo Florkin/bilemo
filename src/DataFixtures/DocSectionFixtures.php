@@ -14,7 +14,7 @@ class DocSectionFixtures extends Fixture
         $faker = Factory::create('fr_FR');
         $faker->addProvider(new \DavidBadura\FakerMarkdownGenerator\FakerProvider($faker));
 
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $docSection = new DocSection();
             $docSection->setTitle($faker->sentences(1, true));
             $docSection->setContent($faker->markdown());

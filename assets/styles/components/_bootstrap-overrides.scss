@@ -1,7 +1,15 @@
 .card {
   height: 100%;
 
+  &.clickable {
+    cursor: pointer;
+  }
+
   .card-footer {
     border-top: none;
   }
+}
+
+.btn {
+  text-transform: uppercase;
 }
