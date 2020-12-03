@@ -7,3 +7,6 @@ admin:
     permanent: true
     # ...and keep the original query string parameters
     keepQueryParams: true
+
+api_login_check:
+  path: /api/login_check

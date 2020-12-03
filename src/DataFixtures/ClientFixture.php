@@ -3,15 +3,15 @@
 namespace App\DataFixtures;
 
 use App\Entity\Client;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class ClientFixture extends Fixture
 {
-    private $encoder;
+    private UserPasswordEncoderInterface $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder)
     {
@@ -20,17 +20,15 @@ class ClientFixture extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        // CREATE ADMIN
         $user = new Client;
         $user
-            ->setEmail("tristan@bilemo.fr")
+            ->setEmail('client@demo.fr')
             ->setPassword($this->encoder->encodePassword($user, "demodemo"))
-            ->setUsername("Tristan")
-            ->setRoles(["ROLE_ADMIN"]);
+            ->setUsername('ClientDemoUsername')
+            ->setRoles(["ROLE_USER"]);
         $manager->persist($user);
 
         $faker = Factory::create('fr_FR');
-
         for ($i = 0; $i < 6; $i++) {
             $user = new Client;
             $user
