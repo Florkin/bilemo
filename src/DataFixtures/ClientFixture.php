@@ -20,8 +20,15 @@ class ClientFixture extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        $faker = Factory::create('fr_FR');
+        $user = new Client;
+        $user
+            ->setEmail('client@demo.fr')
+            ->setPassword($this->encoder->encodePassword($user, "demodemo"))
+            ->setUsername('ClientDemoUsername')
+            ->setRoles(["ROLE_USER"]);
+        $manager->persist($user);
 
+        $faker = Factory::create('fr_FR');
         for ($i = 0; $i < 6; $i++) {
             $user = new Client;
             $user

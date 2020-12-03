@@ -24,7 +24,7 @@ class DocSection
     private $title;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $content;
 
@@ -37,6 +37,21 @@ class DocSection
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateUpdate;
+
+    /**
+     * @ORM\Column(type="string", length=8)
+     */
+    private $requestMethod;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $requestUrl;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $contentType;
 
     public function __construct()
     {
@@ -99,5 +114,41 @@ class DocSection
     public function getSlug(): string
     {
         return (new Slugify())->slugify($this->title);
+    }
+
+    public function getRequestMethod(): ?string
+    {
+        return $this->requestMethod;
+    }
+
+    public function setRequestMethod(string $requestMethod): self
+    {
+        $this->requestMethod = $requestMethod;
+
+        return $this;
+    }
+
+    public function getRequestUrl(): ?string
+    {
+        return $this->requestUrl;
+    }
+
+    public function setRequestUrl(string $requestUrl): self
+    {
+        $this->requestUrl = $requestUrl;
+
+        return $this;
+    }
+
+    public function getContentType(): ?string
+    {
+        return $this->contentType;
+    }
+
+    public function setContentType(string $contentType): self
+    {
+        $this->contentType = $contentType;
+
+        return $this;
     }
 }

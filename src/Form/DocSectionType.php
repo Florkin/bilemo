@@ -17,8 +17,18 @@ class DocSectionType extends AbstractType
             ->add('title', TextType::class, [
                 'label' => 'Titre'
             ])
+            ->add('requestMethod', TextType::class, [
+                'label' => 'Methode de la requète'
+            ])
+            ->add('requestUrl', TextType::class, [
+                'label' => 'Url de la requète'
+            ])
+            ->add('contentType', TextType::class, [
+                'label' => 'Type de contenu'
+            ])
             ->add('content', TextareaType::class, [
-                'label' => 'Contenu'
+                'label' => 'Contenu',
+                'required' => false
             ])
         ;
     }
