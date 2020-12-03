@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="jumbotron jumbotron-fluid">
+		<div class="container">
+			<h1 class="display-4">{% block formtitle %}{% endblock %}</h1>
+		</div>
+	</div>
+	<div class="container">
+		{% block form %}{% endblock %}
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	{{ encore_entry_script_tags('dropzone') }}
+	{{ encore_entry_script_tags('markdownEditor') }}
+{% endblock %}

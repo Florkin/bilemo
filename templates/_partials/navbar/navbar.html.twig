@@ -10,8 +10,28 @@
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
 		<ul class="navbar-nav mr-auto">
 			<li class="nav-item">
-				<a class="nav-link" href="{{ path('doc_section_index') }}">Documentation</a>
+				<a class="nav-link" href="{{ path('doc_section_index') }}">
+					<span class="fa fa-book"></span>
+					<span class="d-inline ml-2">Documentation</span>
+				</a>
 			</li>
+			{% if is_granted('ROLE_ADMIN') %}
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+					   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<span class="fa fa-cog"></span>
+						<span class="d-inline ml-2">Admin</span>
+					</a>
+					<div class="dropdown-menu user-dropdown" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" href="{{ path("manage_product_index") }}">
+							Gérer les produits
+						</a>
+						<a class="dropdown-item" href="{{ path("manage_brand_index") }}">
+							Gérer les marques
+						</a>
+					</div>
+				</li>
+			{% endif %}
 		</ul>
 		
 		<ul class="navbar-nav right-nav">

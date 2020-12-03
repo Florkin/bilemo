@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Manager;
 
 use App\Entity\DocSection;
 use App\Form\DocSectionType;
 use App\Handlers\Forms\EntityFormHandler;
 use App\Repository\DocSectionRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,13 +33,21 @@ class DocSectionController extends AbstractController
 
     /**
      * @Route("/", name="doc_section_index", methods={"GET"})
+     * @param PaginatorInterface $paginator
+     * @param Request $request
      * @param DocSectionRepository $docSectionRepository
      * @return Response
      */
-    public function index(DocSectionRepository $docSectionRepository): Response
+    public function index(PaginatorInterface $paginator, Request $request, DocSectionRepository $docSectionRepository): Response
     {
+        $sections = $paginator->paginate(
+            $docSectionRepository->findAll(),
+            $request->query->getInt('page', 1),
+            12
+        );
+
         return $this->render('doc_section/index.html.twig', [
-            'doc_sections' => $docSectionRepository->findAll(),
+            'doc_sections' => $sections,
         ]);
     }
 

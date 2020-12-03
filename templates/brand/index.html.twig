@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Les marques{% endblock %}
+
+{% block body %}
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4">Gestion des marques</h1>
+        </div>
+    </div>
+    <div class="container">
+            <a class="btn btn-primary" href="{{ path('manage_brand_new') }}">Créer une nouvelle marque</a>
+            <hr>
+        
+        <div class="row">
+            {% for brand in brands %}
+                <div class="col-12 mb-3">
+                    <div class="card clickable">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-12 col-md-8 col-lg-9 col-xl-10">
+                                    <h4>{{ brand.name }}</h4>
+                                </div>
+                                <div class="col-12 col-md-4 col-lg-3 col-xl-2 d-flex justify-content-end">
+                                    <div class="card-actions">
+                                        <a class="btn btn-success" data-toggle="collapse"
+                                           href="#collapsible-content-{{ loop.index }}" role="button"
+                                           aria-expanded="false">
+                                            <span class="fa fa-eye"></span>
+                                        </a>
+                                            <a class="btn btn-outline-warning"
+                                               href="{{ path('manage_brand_edit', {'id': brand.id}) }}">
+                                                <span class="fa fa-edit"></span>
+                                            </a>
+                                            <form method="post" class="d-inline-block"
+                                                  action="{{ path("manage_brand_delete", {id: brand.id}) }}"
+                                                  onsubmit="return confirm('Êtes vous sur de vouloir supprimer cette marque?')">
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <input type="hidden" name="_token"
+                                                       value="{{ csrf_token("delete" ~ brand.id) }}">
+                                                <button type="submit" href="#" class="btn btn-danger">
+                                                    <span class="fa fa-trash"></span>
+                                                </button>
+                                            </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="collapse" id="collapsible-content-{{ loop.index }}">
+                            <div class="content">
+                                <div class="p-4">
+                                    {{ brand.description }}
+                                </div>
+                            </div>
+                        </div>
+                        
+{#                        <div class="card-footer">#}
+{#                            <small>#}
+{#                                Créé le {{ doc.dateAdd|format_datetime('full', 'none', locale='fr') }}#}
+{#                                {% if doc.dateUpdate is not null %}#}
+{#                                    , dernière mise a jour le {{ doc.dateUpdate|format_datetime('full', 'none', locale='fr') }}#}
+{#                                {% endif %}#}
+{#                            </small>#}
+{#                        </div>#}
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12">Aucune marque trouvée</div>
+            {% endfor %}
+        </div>
+    
+        <div class="navigation">
+            {{ knp_pagination_render(brands) }}
+        </div>
+    </div>
+{% endblock %}
+

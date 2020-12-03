@@ -74,5 +74,9 @@
 				<div class="col-12">Aucune section trouvée</div>
 			{% endfor %}
 		</div>
+		
+		<div class="navigation">
+			{{ knp_pagination_render(doc_sections) }}
+		</div>
 	</div>
 {% endblock %}

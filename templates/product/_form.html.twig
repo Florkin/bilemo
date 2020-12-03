@@ -1,0 +1,9 @@
+{{ form_start(form) }}
+<div class="dropzone file-dropzone"
+		{% if product.id is defined and product.id != null %}
+			data-product-id="{{ product.id }}"
+		{% endif %}
+></div>
+{{ form_widget(form) }}
+<button class="btn btn-success">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
