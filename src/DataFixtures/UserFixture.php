@@ -3,51 +3,44 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
-use App\Repository\ClientRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class UserFixture extends Fixture implements DependentFixtureInterface
+class UserFixture extends Fixture
 {
-    /**
-     * @var ClientRepository
-     */
-    private $clientRepository;
+    private $encoder;
 
-    /**
-     * UserFixture constructor.
-     * @param ClientRepository $clientRepository
-     */
-    public function __construct(ClientRepository $clientRepository)
+    public function __construct(UserPasswordEncoderInterface $encoder)
     {
-        $this->clientRepository = $clientRepository;
+        $this->encoder = $encoder;
     }
 
     public function load(ObjectManager $manager)
     {
-        $clients = $this->clientRepository->findAll();
+        // CREATE ADMIN
+        $user = new User;
+        $user
+            ->setEmail("tristan@bilemo.fr")
+            ->setPassword($this->encoder->encodePassword($user, "demodemo"))
+            ->setUsername("Tristan")
+            ->setRoles(["ROLE_ADMIN"]);
+        $manager->persist($user);
+
         $faker = Factory::create('fr_FR');
-        for ($i = 0; $i < 100; $i++) {
-            $user = new User();
+
+        for ($i = 0; $i < 6; $i++) {
+            $user = new User;
             $user
-                ->setFirstname($faker->firstName())
-                ->setLastname($faker->lastName)
                 ->setEmail($faker->email)
-                ->setClient($faker->randomElement($clients));
-
+                ->setPassword($this->encoder->encodePassword($user, "demodemo"))
+                ->setUsername($faker->userName)
+                ->setRoles(["ROLE_USER"]);
             $manager->persist($user);
-
         }
 
-        $manager->flush();;
-    }
-
-    public function getDependencies()
-    {
-        return array(
-            ClientFixture::class,
-        );
+        $manager->flush();
     }
 }
+
