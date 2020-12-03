@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\ClientUser;
+use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -12,22 +13,22 @@ use Faker\Factory;
 class ClientUserFixture extends Fixture implements DependentFixtureInterface
 {
     /**
-     * @var UserRepository
+     * @var ClientRepository
      */
-    private $userRepository;
+    private ClientRepository $clientRepository;
 
     /**
      * UserFixture constructor.
-     * @param UserRepository $userRepository
+     * @param ClientRepository $clientRepository
      */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(ClientRepository $clientRepository)
     {
-        $this->userRepository = $userRepository;
+        $this->clientRepository = $clientRepository;
     }
 
     public function load(ObjectManager $manager)
     {
-        $users = $this->userRepository->findAll();
+        $clients = $this->clientRepository->findAll();
         $faker = Factory::create('fr_FR');
         for ($i = 0; $i < 100; $i++) {
             $user = new ClientUser();
@@ -35,7 +36,7 @@ class ClientUserFixture extends Fixture implements DependentFixtureInterface
                 ->setFirstname($faker->firstName())
                 ->setLastname($faker->lastName)
                 ->setEmail($faker->email)
-                ->setUser($faker->randomElement($users));
+                ->setClient($faker->randomElement($clients));
 
             $manager->persist($user);
 
@@ -47,7 +48,7 @@ class ClientUserFixture extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return array(
-            UserFixture::class,
+            ClientFixture::class,
         );
     }
 }

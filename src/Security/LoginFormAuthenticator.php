@@ -74,6 +74,10 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
             throw new CustomUserMessageAuthenticationException('Email could not be found.');
         }
 
+        if (!in_array('ROLE_ADMIN', $user->getRoles())) {
+            throw new CustomUserMessageAuthenticationException('Ce compte utilisateur est dédié a l\'utilisation de L\'API. Vous ne pouvez pas accéder à cette section.');
+        };
+
         return $user;
     }
 
