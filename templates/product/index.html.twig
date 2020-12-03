@@ -49,6 +49,19 @@
 						
 						<div class="collapse" id="collapsible-content-{{ loop.index }}">
 							<div class="content">
+								{% if product.pictures|length > 0 %}
+									<div class="row">
+										{% for pic in product.pictures %}
+											<div class="col-12 col-lg-6">
+												<div class="p-3">
+													<img class="img-fluid"
+														 src="{{ vich_uploader_asset(pic, 'imageFile', 'App\\Entity\\Picture') | imagine_filter('thumb') }}"
+														 alt="{{ product.name }}">
+												</div>
+											</div>
+										{% endfor %}
+									</div>
+								{% endif %}
 								<div class="p-4">
 									{{ product.description }}
 								</div>
