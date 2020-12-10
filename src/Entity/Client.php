@@ -3,8 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ClientRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 
 /**
  * @ORM\Entity(repositoryClass=ClientRepository::class)
@@ -25,7 +25,7 @@ class Client extends User
 
     public function __construct()
     {
-        $this->users = new ArrayCollection();
+        $this->users = new PersistentCollection();
     }
 
     public function getId(): ?int
@@ -34,9 +34,9 @@ class Client extends User
     }
 
     /**
-     * @return ArrayCollection
+     * @return PersistentCollection
      */
-    public function getUsers(): ArrayCollection
+    public function getUsers(): PersistentCollection
     {
         return $this->users;
     }

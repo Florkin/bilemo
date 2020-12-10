@@ -2,13 +2,10 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Product;
-use App\Form\ProductType;
 use App\Repository\ProductRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -38,15 +35,35 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/products", name="products", methods={"GET"}, options={"expose" = true})
+     * @Route("/products", name="product_index", methods={"GET"}, options={"expose" = true})
      * @return Response
      */
     public function index(): Response
     {
-        $products = $this->serializer->serialize($this->productRepository->findAll(), 'json');
+        $products = $this->productRepository->findAll();
 
-        return new Response($products, 200, array('Content-Type' => 'application/json'));
+        if ($products) {
+            $productsJSON = $this->serializer->serialize($products, 'json');
+            return new Response($productsJSON, 200, array('Content-Type' => 'application/json'));
+        }
+
+        return new JsonResponse(["error" => "Il n'y a aucun produit"], 404);
     }
 
+    /**
+     * @Route("/products/{id}", name="show_product", methods={"GET"}, options={"expose" = true})
+     * @param int $id
+     * @return Response
+     */
+    public function show(int $id): Response
+    {
+        $product = $this->productRepository->find($id);
 
+        if ($product) {
+            $productJSON = $this->serializer->serialize($product, 'json');
+            return new Response($productJSON, 200, array('Content-Type' => 'application/json'));
+        }
+
+        return new JsonResponse(["error" => "Ce produit n'existe pas"], 404);
+    }
 }
