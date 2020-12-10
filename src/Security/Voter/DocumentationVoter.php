@@ -2,11 +2,11 @@
 
 namespace App\Security\Voter;
 
+use App\Entity\Admin;
 use App\Entity\DocSection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class DocumentationVoter extends Voter
 {
@@ -37,7 +37,7 @@ class DocumentationVoter extends Voter
     {
         $user = $token->getUser();
         // if the user is anonymous, do not grant access
-        if (!$user instanceof UserInterface) {
+        if (!$user instanceof Admin) {
             return false;
         }
 

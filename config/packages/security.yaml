@@ -4,16 +4,23 @@ security:
             algorithm: auto
         App\Entity\Client:
             algorithm: auto
+        App\Entity\Admin:
+            algorithm: auto
+
 
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
-        app_user_provider:
+        admin_user_provider:
+            entity:
+                class: App\Entity\Admin
+                property: email
+
+        api_user_provider:
             entity:
                 class: App\Entity\Client
                 property: email
-        # used to reload user from session & other features (e.g. switch_user)
 
     firewalls:
         dev:
@@ -21,6 +28,7 @@ security:
             security: false
 
         login:
+            provider: api_user_provider
             pattern:  ^/api/login
             stateless: true
             anonymous: true
@@ -30,6 +38,7 @@ security:
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
 
         api:
+            provider: api_user_provider
             pattern:   ^/api
             stateless: true
             guard:
@@ -39,7 +48,7 @@ security:
         main:
             anonymous: true
             lazy: true
-            provider: app_user_provider
+            provider: admin_user_provider
             guard:
                 authenticators:
                     - App\Security\LoginFormAuthenticator
