@@ -18,25 +18,25 @@ class Product
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"list_product", "details_product"})
+     * @Groups({"list_product", "details_product", "details_brand"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"list_product", "details_product"})
+     * @Groups({"list_product", "details_product", "details_brand"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"list_product", "details_product"})
+     * @Groups({"list_product", "details_product", "details_brand"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"list_product", "details_product"})
+     * @Groups({"list_product", "details_product", "details_brand"})
      */
     private $price;
 

@@ -18,19 +18,21 @@ class Brand
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"list_product", "details_product"})
+     * @Groups({"list_product", "details_product", "list_brand", "details_brand"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"list_product", "details_product"})
+     * @Groups({"list_product", "details_product", "list_brand", "details_brand"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="text")
      * @Groups({"details_brand"})
+     * @Groups({"list_product", "details_product", "list_brand", "details_brand"})
      */
     private $description;
 
@@ -38,11 +40,11 @@ class Brand
      * @ORM\OneToMany(targetEntity=Product::class, mappedBy="brand", orphanRemoval=true)
      * @Groups({"details_brand"})
      */
-    private $Products;
+    private $products;
 
     public function __construct()
     {
-        $this->Products = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -79,13 +81,13 @@ class Brand
      */
     public function getProducts(): Collection
     {
-        return $this->Products;
+        return $this->products;
     }
 
     public function addProduct(Product $product): self
     {
-        if (!$this->Products->contains($product)) {
-            $this->Products[] = $product;
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
             $product->setBrand($this);
         }
 
@@ -94,7 +96,7 @@ class Brand
 
     public function removeProduct(Product $product): self
     {
-        if ($this->Products->removeElement($product)) {
+        if ($this->products->removeElement($product)) {
             // set the owning side to null (unless already changed)
             if ($product->getBrand() === $this) {
                 $product->setBrand(null);

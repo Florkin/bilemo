@@ -46,16 +46,18 @@ class ImageUrlSubscriber implements EventSubscriberInterface
 
     public function onPostSerialize(ObjectEvent $event)
     {
-        $pictures = $event->getObject()->getPictures();
-        $picturesPaths = [];
-        foreach($pictures as $picture) {
-            $urls = [];
-            $path = $this->uploaderHelper->asset($picture, 'imageFile');
-            foreach (['mid_size_formated', 'thumb'] as $pattern) {
-                $urls[$pattern] = $this->cacheManager->getBrowserPath($path, sprintf('%s', $pattern));
+        if (in_array('details_product', $event->getContext()->getAttribute('groups'))) {
+            $pictures = $event->getObject()->getPictures();
+            $picturesPaths = [];
+            foreach($pictures as $picture) {
+                $urls = [];
+                $path = $this->uploaderHelper->asset($picture, 'imageFile');
+                foreach (['mid_size_formated', 'thumb'] as $pattern) {
+                    $urls[$pattern] = $this->cacheManager->getBrowserPath($path, sprintf('%s', $pattern));
+                }
+                $picturesPaths[] = $urls;
             }
-            $picturesPaths[] = $urls;
+            $event->getVisitor()->visitProperty(new StaticPropertyMetadata ('', 'images', null), $picturesPaths);
         }
-        $event->getVisitor()->visitProperty(new StaticPropertyMetadata ('', 'images', null), $picturesPaths);
     }
 }
