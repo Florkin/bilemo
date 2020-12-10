@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -17,27 +18,32 @@ class Product
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"list_product", "details_product"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"list_product", "details_product"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"list_product", "details_product"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"list_product", "details_product"})
      */
     private $price;
 
     /**
      * @ORM\ManyToOne(targetEntity=Brand::class, inversedBy="Products")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"list_product", "details_product"})
      */
     private $brand;
 
@@ -48,7 +54,7 @@ class Product
 
     /**
      * @Assert\All({
-    @Assert\Image(mimeTypes = {"image/jpeg", "image/jpg", "image/webp", "image/png"})
+        @Assert\Image(mimeTypes = {"image/jpeg", "image/jpg", "image/webp", "image/png"})
      * })
      */
     private $pictureFiles;

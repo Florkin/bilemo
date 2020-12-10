@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Repository\ProductRepository;
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -43,7 +44,8 @@ class ProductController extends AbstractController
         $products = $this->productRepository->findAll();
 
         if ($products) {
-            $productsJSON = $this->serializer->serialize($products, 'json');
+            $context = SerializationContext::create()->setGroups(['list_product']);
+            $productsJSON = $this->serializer->serialize($products, 'json', $context);
             return new Response($productsJSON, 200, array('Content-Type' => 'application/json'));
         }
 
@@ -60,7 +62,8 @@ class ProductController extends AbstractController
         $product = $this->productRepository->find($id);
 
         if ($product) {
-            $productJSON = $this->serializer->serialize($product, 'json');
+            $context = SerializationContext::create()->setGroups(['details_product']);
+            $productJSON = $this->serializer->serialize($product, 'json', $context);
             return new Response($productJSON, 200, array('Content-Type' => 'application/json'));
         }
 

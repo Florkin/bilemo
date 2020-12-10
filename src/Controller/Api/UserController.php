@@ -8,6 +8,7 @@ use App\Handlers\Forms\FormErrorsHandler;
 use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
@@ -54,10 +55,11 @@ class UserController extends AbstractController
      */
     public function index(): Response
     {
-        $users = $this->UserRepository->findAll();
+        $users = $this->UserRepository->findUsersFromClientId($this->getUser()->getId());
 
         if ($users) {
-            $usersJSON = $this->serializer->serialize($users, 'json');
+            $context = SerializationContext::create()->setGroups(['list_user']);
+            $usersJSON = $this->serializer->serialize($users, 'json', $context);
             return new Response($usersJSON, 200, array('Content-Type' => 'application/json'));
         }
 
@@ -74,7 +76,8 @@ class UserController extends AbstractController
         $user = $this->UserRepository->find($id);
 
         if ($user) {
-            $userJSON = $this->serializer->serialize($user, 'json');
+            $context = SerializationContext::create()->setGroups(['details_user']);
+            $userJSON = $this->serializer->serialize($user, 'json', $context);
             return new Response($userJSON, 200, array('Content-Type' => 'application/json'));
         }
 
