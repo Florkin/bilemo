@@ -3,31 +3,51 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
+use App\Repository\ClientRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Faker\Factory;
 
-class UserFixture extends Fixture
+class UserFixture extends Fixture implements DependentFixtureInterface
 {
-    private UserPasswordEncoderInterface $encoder;
+    /**
+     * @var ClientRepository
+     */
+    private $clientRepository;
 
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    /**
+     * UserFixture constructor.
+     * @param ClientRepository $clientRepository
+     */
+    public function __construct(ClientRepository $clientRepository)
     {
-        $this->encoder = $encoder;
+        $this->clientRepository = $clientRepository;
     }
 
     public function load(ObjectManager $manager)
     {
-        // CREATE ADMIN
-        $user = new User;
-        $user
-            ->setEmail("tristan@bilemo.fr")
-            ->setPassword($this->encoder->encodePassword($user, "demodemo"))
-            ->setUsername("Tristan")
-            ->setRoles(["ROLE_ADMIN"]);
-        $manager->persist($user);
+        $clients = $this->clientRepository->findAll();
+        $faker = Factory::create('fr_FR');
+        for ($i = 0; $i < 100; $i++) {
+            $user = new User();
+            $user
+                ->setFirstname($faker->firstName())
+                ->setLastname($faker->lastName)
+                ->setEmail($faker->email)
+                ->setClient($faker->randomElement($clients));
 
-        $manager->flush();
+            $manager->persist($user);
+
+        }
+
+        $manager->flush();;
+    }
+
+    public function getDependencies()
+    {
+        return array(
+            ClientFixture::class,
+        );
     }
 }
-

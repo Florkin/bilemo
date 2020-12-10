@@ -2,11 +2,11 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\ClientUser;
-use App\Form\ClientUserType;
+use App\Entity\User;
+use App\Form\UserType;
 use App\Handlers\Forms\FormErrorsHandler;
 use App\Repository\ClientRepository;
-use App\Repository\ClientUserRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,16 +19,16 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/api")
  */
-class ClientUserController extends AbstractController
+class UserController extends AbstractController
 {
     /**
      * @var SerializerInterface
      */
     private $serializer;
     /**
-     * @var ClientUserRepository
+     * @var UserRepository
      */
-    private $clientUserRepository;
+    private $UserRepository;
     /**
      * @var EntityManagerInterface
      */
@@ -37,13 +37,13 @@ class ClientUserController extends AbstractController
     /**
      * ProductController constructor.
      * @param SerializerInterface $serializer
-     * @param ClientUserRepository $clientUserRepository
+     * @param UserRepository $UserRepository
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(SerializerInterface $serializer, ClientUserRepository $clientUserRepository, EntityManagerInterface $entityManager)
+    public function __construct(SerializerInterface $serializer, UserRepository $UserRepository, EntityManagerInterface $entityManager)
     {
         $this->serializer = $serializer;
-        $this->clientUserRepository = $clientUserRepository;
+        $this->UserRepository = $UserRepository;
         $this->entityManager = $entityManager;
     }
 
@@ -53,7 +53,7 @@ class ClientUserController extends AbstractController
      */
     public function index(): Response
     {
-        $users = $this->clientUserRepository->findAll();
+        $users = $this->UserRepository->findAll();
 
         if ($users) {
             $usersJSON = $this->serializer->serialize($users, 'json');
@@ -70,7 +70,7 @@ class ClientUserController extends AbstractController
      */
     public function show(int $id): Response
     {
-        $user = $this->clientUserRepository->find($id);
+        $user = $this->UserRepository->find($id);
 
         if ($user) {
             $userJSON = $this->serializer->serialize($user, 'json');
@@ -88,7 +88,7 @@ class ClientUserController extends AbstractController
      */
     public function new(Request $request, ClientRepository $clientRepository): Response
     {
-        $user = $this->serializer->deserialize($request->getContent(), ClientUser::class, 'json');
+        $user = $this->serializer->deserialize($request->getContent(), User::class, 'json');
         // TODO get the current client
         $client = $clientRepository->find(25);
         $user->setClient($client);
@@ -106,9 +106,9 @@ class ClientUserController extends AbstractController
      */
     public function edit(int $id, Request $request, FormErrorsHandler $errorsHandler): Response
     {
-        $user = $this->clientUserRepository->find($id);
+        $user = $this->UserRepository->find($id);
         $data = $this->serializer->deserialize($request->getContent(), "array", 'json');
-        $form = $this->createForm(ClientUserType::class, $user, [
+        $form = $this->createForm(UserType::class, $user, [
             'csrf_protection' => false,
             'method' => "PATCH"
         ]);
@@ -132,7 +132,7 @@ class ClientUserController extends AbstractController
      */
     public function delete(int $id, Request $request): Response
     {
-        $user = $this->clientUserRepository->find($id);
+        $user = $this->UserRepository->find($id);
         $this->entityManager->remove($user);
         $this->entityManager->flush();
         return new JsonResponse(["success" => "L'utilisateur a bien été supprimé"], 200);
