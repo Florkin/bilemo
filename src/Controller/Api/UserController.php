@@ -3,7 +3,6 @@
 namespace App\Controller\Api;
 
 use App\Entity\User;
-use App\Form\UserType;
 use App\Handlers\Forms\FormErrorsHandler;
 use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
@@ -11,11 +10,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface as Serializer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -35,18 +34,24 @@ class UserController extends AbstractController
      * @var EntityManagerInterface
      */
     private $entityManager;
+    /**
+     * @var Serializer
+     */
+    private $deserializer;
 
     /**
      * ProductController constructor.
      * @param SerializerInterface $serializer
+     * @param Serializer $deserializer
      * @param UserRepository $UserRepository
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(SerializerInterface $serializer, UserRepository $UserRepository, EntityManagerInterface $entityManager)
+    public function __construct(SerializerInterface $serializer, Serializer $deserializer, UserRepository $UserRepository, EntityManagerInterface $entityManager)
     {
         $this->serializer = $serializer;
         $this->UserRepository = $UserRepository;
         $this->entityManager = $entityManager;
+        $this->deserializer = $deserializer;
     }
 
     /**
@@ -116,27 +121,34 @@ class UserController extends AbstractController
      * @param int $id
      * @param Request $request
      * @param FormErrorsHandler $errorsHandler
+     * @param ValidatorInterface $validator
      * @return Response
      */
-    public function edit(int $id, Request $request, FormErrorsHandler $errorsHandler): Response
+    public function edit(int $id, Request $request, FormErrorsHandler $errorsHandler, ValidatorInterface $validator): Response
     {
         $user = $this->UserRepository->find($id);
         if ($user) {
             if ($this->isGranted('EDIT_USER', $user)) {
-                $data = $this->serializer->deserialize($request->getContent(), "array", 'json');
-                $form = $this->createForm(UserType::class, $user, [
-                    'csrf_protection' => false,
-                    'method' => "PATCH"
+                $userToCompare = clone $user;
+                $this->deserializer->deserialize($request->getContent(), User::class, "json", [
+                    'object_to_populate' => $user,
                 ]);
-                $form->submit($data);
-                if ($form->isValid()) {
-                    $this->entityManager->persist($user);
-                    $this->entityManager->flush();
-                    return new JsonResponse(["success" => "L'utilisateur a bien été modifié"], 200);
-                }
 
-                $errors = $errorsHandler->getErrors($form);
-                return new JsonResponse($errors, 202);
+                if ($userToCompare != $user) {
+                    $errors = $validator->validate($user);
+                    if (!count($errors) > 0) {
+                        $this->entityManager->persist($user);
+                        $this->entityManager->flush();
+                        return new JsonResponse(["success" => "L'utilisateur a bien été modifié"], 200);
+                    }
+
+                    $errorMessages = [];
+                    foreach ($errors as $error) {
+                        $errorMessages[] = $error->getMessage();
+                    }
+                    return new JsonResponse($errorMessages, 202);
+                }
+                return new JsonResponse(["Error" => "Aucun changement detecté"], 202);
             }
             return new JsonResponse(["Error" => "Accès refusé à cet utilisateur"], 403);
         }
