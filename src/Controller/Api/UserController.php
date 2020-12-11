@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface as Serializer;
+use Symfony\Component\Serializer\SerializerInterface as SymfonySerializer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -35,18 +35,18 @@ class UserController extends AbstractController
      */
     private $entityManager;
     /**
-     * @var Serializer
+     * @var SymfonySerializer
      */
     private $deserializer;
 
     /**
      * ProductController constructor.
      * @param SerializerInterface $serializer
-     * @param Serializer $deserializer
+     * @param SymfonySerializer $deserializer
      * @param UserRepository $UserRepository
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(SerializerInterface $serializer, Serializer $deserializer, UserRepository $UserRepository, EntityManagerInterface $entityManager)
+    public function __construct(SerializerInterface $serializer, SymfonySerializer $deserializer, UserRepository $UserRepository, EntityManagerInterface $entityManager)
     {
         $this->serializer = $serializer;
         $this->UserRepository = $UserRepository;

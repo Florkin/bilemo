@@ -8,9 +8,14 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation\Groups;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
+ * @Hateoas\Relation("_self",
+ *      href = @Hateoas\Route("show_product", parameters = {"id" = "expr(object.getId())"}, absolute = true),
+ *      exclusion = @Hateoas\Exclusion(groups={"list_product", "details_product"})
+ * )
  */
 class Product
 {

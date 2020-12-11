@@ -46,10 +46,14 @@ class ImageUrlSubscriber implements EventSubscriberInterface
 
     public function onPostSerialize(ObjectEvent $event)
     {
-        if (in_array('details_product', $event->getContext()->getAttribute('groups'))) {
+        $context = $event->getContext()->getAttribute('groups');
+        if (
+            in_array('details_product', $context)
+            || in_array('list_product', $context)
+        ) {
             $pictures = $event->getObject()->getPictures();
             $picturesPaths = [];
-            foreach($pictures as $picture) {
+            foreach ($pictures as $picture) {
                 $urls = [];
                 $path = $this->uploaderHelper->asset($picture, 'imageFile');
                 foreach (['mid_size_formated', 'thumb'] as $pattern) {

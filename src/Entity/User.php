@@ -6,10 +6,15 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation\Groups;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @Hateoas\Relation("_self",
+ *      href = @Hateoas\Route("show_user", parameters = {"id" = "expr(object.getId())"}, absolute = true),
+ *      exclusion = @Hateoas\Exclusion(groups={"list_user", "details_user"})
+ * )
  */
 class User
 {
