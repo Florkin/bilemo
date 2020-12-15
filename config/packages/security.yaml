@@ -39,7 +39,7 @@ security:
 
         api:
             provider: api_user_provider
-            pattern:   ^/api
+            pattern:   ^/api(?!/doc$)
             stateless: true
             guard:
                 authenticators:
@@ -71,4 +71,4 @@ security:
     access_control:
          - { path: ^/manager, roles: ROLE_ADMIN }
          - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
+         - { path: ^/api(?!/doc$),       roles: IS_AUTHENTICATED_FULLY }

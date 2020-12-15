@@ -2,7 +2,7 @@ admin:
   path: /
   controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
   defaults:
-    route: doc_section_index
+    route: app.swagger_ui
     # make a permanent redirection...
     permanent: true
     # ...and keep the original query string parameters
@@ -10,3 +10,13 @@ admin:
 
 api_login_check:
   path: /api/login_check
+
+app.swagger_ui:
+  path: /api/doc
+  methods: GET
+  defaults: { _controller: nelmio_api_doc.controller.swagger_ui }
+
+app.swagger:
+  path: /api/doc.json
+  methods: GET
+  defaults: { _controller: nelmio_api_doc.controller.swagger }
