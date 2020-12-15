@@ -1,4 +1,4 @@
-admin:
+doc:
   path: /
   controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
   defaults:

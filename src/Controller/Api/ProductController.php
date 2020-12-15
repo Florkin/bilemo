@@ -12,6 +12,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use OpenApi\Annotations as OA;
 
 /**
  * @Route("/api")
@@ -46,6 +49,10 @@ class ProductController extends AbstractController
 
     /**
      * @Route("/products", name="product_index", methods={"GET"}, options={"expose" = true})
+     * @OA\Response(
+     *     response=200,
+     *     description="Return first page of product list (Default: ?page=1&limit=12)",
+     * )
      * @param Request $request
      * @param PaginatorInterface $pager
      * @return Response
