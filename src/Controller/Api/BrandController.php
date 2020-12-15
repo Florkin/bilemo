@@ -51,4 +51,22 @@ class BrandController extends AbstractController
 
         return new JsonResponse(["error" => "Il n'y a aucune marque"], 404);
     }
+
+    /**
+     * @Route("/brands/{id}", name="brand_show", methods={"GET"}, options={"expose" = true})
+     * @param int $id
+     * @return Response
+     */
+    public function show(int $id): Response
+    {
+        $brand = $this->brandRepository->find($id);
+
+        if ($brand) {
+            $context = SerializationContext::create()->setGroups(['details_brand']);
+            $brandJSON = $this->serializer->serialize($brand, 'json', $context);
+            return new Response($brandJSON, 200, array('Content-Type' => 'application/json'));
+        }
+
+        return new JsonResponse(["error" => "Cette marque n'existe pas"], 404);
+    }
 }

@@ -13,7 +13,7 @@ use Hateoas\Configuration\Annotation as Hateoas;
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
  * @Hateoas\Relation("_self",
- *      href = @Hateoas\Route("show_product", parameters = {"id" = "expr(object.getId())"}, absolute = true),
+ *      href = @Hateoas\Route("product_show", parameters = {"id" = "expr(object.getId())"}, absolute = true),
  *      exclusion = @Hateoas\Exclusion(groups={"list_product", "details_product"})
  * )
  */

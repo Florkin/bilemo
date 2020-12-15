@@ -12,7 +12,7 @@ use Hateoas\Configuration\Annotation as Hateoas;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @Hateoas\Relation("_self",
- *      href = @Hateoas\Route("show_user", parameters = {"id" = "expr(object.getId())"}, absolute = true),
+ *      href = @Hateoas\Route("user_show", parameters = {"id" = "expr(object.getId())"}, absolute = true),
  *      exclusion = @Hateoas\Exclusion(groups={"list_user", "details_user"})
  * )
  */

@@ -7,10 +7,19 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 
 /**
  * @ORM\Entity(repositoryClass=BrandRepository::class)
+ * @Hateoas\Relation("_self",
+ *      href = @Hateoas\Route("brand_show", parameters = {"id" = "expr(object.getId())"}, absolute = true),
+ *      exclusion = @Hateoas\Exclusion(groups={"list_brand", "details_brand"})
+ * )
+ * @Hateoas\Relation("_products",
+ *      href = @Hateoas\Route("product_index", parameters = {"brand" = "expr(object.getId())"}, absolute = true),
+ *      exclusion = @Hateoas\Exclusion(groups={"list_brand", "details_brand"})
+ * )
  */
 class Brand
 {
@@ -36,7 +45,6 @@ class Brand
 
     /**
      * @ORM\OneToMany(targetEntity=Product::class, mappedBy="brand", orphanRemoval=true)
-     * @Groups({"details_brand"})
      */
     private $products;
 

@@ -72,7 +72,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/users/{id}", name="show_user", methods={"GET"}, options={"expose" = true})
+     * @Route("/users/{id}", name="user_show", methods={"GET"}, options={"expose" = true})
      * @param int $id
      * @return Response
      */
@@ -93,7 +93,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/users", name="new_user", methods={"POST"}, options={"expose" = true})
+     * @Route("/users", name="user_new", methods={"POST"}, options={"expose" = true})
      * @param Request $request
      * @param ClientRepository $clientRepository
      * @param ValidatorInterface $validator
@@ -117,7 +117,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/users/{id}", name="edit_user", methods={"PATCH"}, options={"expose" = true})
+     * @Route("/users/{id}", name="user_edit", methods={"PATCH"}, options={"expose" = true})
      * @param int $id
      * @param Request $request
      * @param FormErrorsHandler $errorsHandler
