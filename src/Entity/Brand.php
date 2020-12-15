@@ -24,14 +24,12 @@ class Brand
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"list_product", "details_product"})
      * @Groups({"list_product", "details_product", "list_brand", "details_brand"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"details_brand"})
      * @Groups({"list_product", "details_product", "list_brand", "details_brand"})
      */
     private $description;
