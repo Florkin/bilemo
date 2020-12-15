@@ -26,7 +26,6 @@ class ProductRepository extends ServiceEntityRepository
             $query->where('p.brand = ' . $brand);
         }
         return $query
-            ->getQuery()
-            ->getResult();
+            ->getQuery()->getResult();
     }
 }

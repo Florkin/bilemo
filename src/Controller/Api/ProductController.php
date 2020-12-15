@@ -6,6 +6,7 @@ use App\Repository\BrandRepository;
 use App\Repository\ProductRepository;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,19 +47,25 @@ class ProductController extends AbstractController
     /**
      * @Route("/products", name="product_index", methods={"GET"}, options={"expose" = true})
      * @param Request $request
+     * @param PaginatorInterface $pager
      * @return Response
      */
-    public function index(Request $request): Response
+    public function index(Request $request, PaginatorInterface $pager): Response
     {
         $brandId = $request->query->get('brand');
         if (null != $brandId && null === $this->brandRepository->find($brandId)) {
             return new JsonResponse(["error" => "Cette marque n'existe pas"], 404);
         };
 
-        $products = $this->productRepository->findAllQueryBuilder($brandId);
-        if ($products) {
+        $page = $pager->paginate(
+            $this->productRepository->findAllQueryBuilder($brandId),
+            $request->query->getInt('page', 1),
+            $request->query->getInt('limit', 12)
+        );
+
+        if ($page->count() > 0) {
             $context = SerializationContext::create()->setGroups(['list_product']);
-            $productsJSON = $this->serializer->serialize($products, 'json', $context);
+            $productsJSON = $this->serializer->serialize($page->getItems(), 'json', $context);
             return new Response($productsJSON, 200, array('Content-Type' => 'application/json'));
         }
 

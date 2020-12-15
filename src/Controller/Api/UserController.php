@@ -9,6 +9,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,15 +57,21 @@ class UserController extends AbstractController
 
     /**
      * @Route("/users", name="user_index", methods={"GET"}, options={"expose" = true})
+     * @param PaginatorInterface $pager
+     * @param Request $request
      * @return Response
      */
-    public function index(): Response
+    public function index(PaginatorInterface $pager, Request $request): Response
     {
-        $users = $this->UserRepository->findUsersFromClientId($this->getUser()->getId());
+        $page = $pager->paginate(
+            $this->UserRepository->findUsersFromClientId($this->getUser()->getId()),
+            $request->query->getInt('page', 1),
+            $request->query->getInt('limit', 12)
+        );
 
-        if ($users) {
+        if ($page->count() > 0) {
             $context = SerializationContext::create()->setGroups(['list_user']);
-            $usersJSON = $this->serializer->serialize($users, 'json', $context);
+            $usersJSON = $this->serializer->serialize($page->getItems(), 'json', $context);
             return new Response($usersJSON, 200, array('Content-Type' => 'application/json'));
         }
 
