@@ -7,6 +7,8 @@
 		<div class="container">
 			<h1 class="display-4">Bilemo API</h1>
 			<p class="lead">Documentation</p>
+			<p>Pour voir la documentation auto-générée, c'est <a href="{{ path("app.swagger_ui") }}">par ici</a></p>
+			
 		</div>
 	</div>
 	<div class="container">
@@ -71,7 +73,7 @@
 										</p>
 										<hr>
 										<p>
-											<h4>Informations sur le contenu à envoyer :</h4>
+{#											<h4>Informations sur le contenu à envoyer :</h4>#}
 											{{ doc.content|markdown }}
 										</p>
 									</div>

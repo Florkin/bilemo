@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface as SymfonySerializer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use OpenApi\Annotations as OA;
 
 /**
  * @Route("/api")
@@ -59,6 +60,10 @@ class UserController extends AbstractController
      * @Route("/users", name="user_index", methods={"GET"}, options={"expose" = true})
      * @param PaginatorInterface $pager
      * @param Request $request
+     * @OA\Response(
+     *     response=200,
+     *     description="Return first page of user list (Default: ?page=1&limit=12). Only users from your account.",
+     * )
      * @return Response
      */
     public function index(PaginatorInterface $pager, Request $request): Response
@@ -80,6 +85,10 @@ class UserController extends AbstractController
 
     /**
      * @Route("/users/{id}", name="user_show", methods={"GET"}, options={"expose" = true})
+     * @OA\Response(
+     *     response=200,
+     *     description="Return single user details.",
+     * )
      * @param int $id
      * @return Response
      */
@@ -104,6 +113,10 @@ class UserController extends AbstractController
      * @param Request $request
      * @param ClientRepository $clientRepository
      * @param ValidatorInterface $validator
+     * @OA\Response(
+     *     response=200,
+     *     description="Add new user.",
+     * )
      * @return Response
      */
     public function new(Request $request, ClientRepository $clientRepository, ValidatorInterface $validator): Response
@@ -129,6 +142,10 @@ class UserController extends AbstractController
      * @param Request $request
      * @param FormErrorsHandler $errorsHandler
      * @param ValidatorInterface $validator
+     * @OA\Response(
+     *     response=200,
+     *     description="Edit user with id_user = {id}.",
+     * )
      * @return Response
      */
     public function edit(int $id, Request $request, FormErrorsHandler $errorsHandler, ValidatorInterface $validator): Response
@@ -167,6 +184,10 @@ class UserController extends AbstractController
      * @Route("/users/{id}", name="delete_user", methods={"DELETE"}, options={"expose" = true})
      * @param int $id
      * @param Request $request
+     * @OA\Response(
+     *     response=200,
+     *     description="Delete user with id_user = {id}.",
+     * )
      * @return Response
      */
     public function delete(int $id, Request $request): Response

@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use OpenApi\Annotations as OA;
 
 /**
  * @Route("/api")
@@ -41,6 +42,10 @@ class BrandController extends AbstractController
      * @Route("/brands", name="brand_index", methods={"GET"}, options={"expose" = true})
      * @param PaginatorInterface $pager
      * @param Request $request
+     * @OA\Response(
+     *     response=200,
+     *     description="Return first page of brand list (Default: ?page=1&limit=12)",
+     * )
      * @return Response
      */
     public function index(PaginatorInterface $pager, Request $request): Response
@@ -62,6 +67,10 @@ class BrandController extends AbstractController
 
     /**
      * @Route("/brands/{id}", name="brand_show", methods={"GET"}, options={"expose" = true})
+     * @OA\Response(
+     *     response=200,
+     *     description="Return single brand details from his ID",
+     * )
      * @param int $id
      * @return Response
      */
