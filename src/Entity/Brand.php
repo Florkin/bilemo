@@ -39,7 +39,7 @@ class Brand
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"list_product", "details_product", "list_brand", "details_brand"})
+     * @Groups({"list_brand", "details_brand"})
      */
     private $description;
 
