@@ -94,15 +94,15 @@ class UserController extends AbstractController
     {
         $user = $this->UserRepository->find($id);
 
-        if ($user) {
-            if ($this->isGranted('SHOW_USER', $user)) {
-                $userJSON = $this->serializer->serialize($user, 'json');
-                return new Response($userJSON, 200, array('Content-Type' => 'application/json'));
-            }
-            return new JsonResponse(["Error" => "Accès refusé à cet utilisateur"], 403);
+        if (!$user) {
+            return new JsonResponse(["error" => "Cet utilisateur n'existe pas"], 404);
         }
 
-        return new JsonResponse(["error" => "Cet utilisateur n'existe pas"], 404);
+        $this->denyAccessUnlessGranted('SHOW_USER', $user);
+        $json = $this->serializer->serialize($user, 'json');
+        return new Response($json, 200, array('Content-Type' => 'application/json'));
+
+
     }
 
     /**
@@ -118,19 +118,19 @@ class UserController extends AbstractController
      */
     public function new(Request $request, ClientRepository $clientRepository, ValidatorInterface $validator): Response
     {
-        $user = $this->serializer->deserialize($request->getContent(), User::class, 'json');
+        $user = $this->deserializer->deserialize($request->getContent(), User::class, "json");
         $user->setClient($this->getUser());
+
         $errors = $validator->validate($user);
+
         if (!count($errors) > 0) {
             $this->entityManager->persist($user);
             $this->entityManager->flush();
-            return new JsonResponse(["success" => "L'utilisateur a bien été créé"], 200);
+            $json = $this->serializer->serialize(["success" => "Utilisateur enregistré", 'item' => $user], 'json');
+            return new Response($json, 200, array('Content-Type' => 'application/json'));
         }
-        $errorMessages = [];
-        foreach ($errors as $error) {
-            $errorMessages[] = $error->getMessage();
-        }
-        return new JsonResponse($errorMessages, 202);
+        $json = $this->serializer->serialize(["errors" => $errors], 'json');
+        return new Response($json, 202, array('Content-Type' => 'application/json'));
     }
 
     /**
@@ -148,32 +148,25 @@ class UserController extends AbstractController
     public function edit(int $id, Request $request, FormErrorsHandler $errorsHandler, ValidatorInterface $validator): Response
     {
         $user = $this->UserRepository->find($id);
-        if ($user) {
-            if ($this->isGranted('EDIT_USER', $user)) {
-                $userToCompare = clone $user;
-                $this->deserializer->deserialize($request->getContent(), User::class, "json", [
-                    'object_to_populate' => $user,
-                ]);
 
-                if ($userToCompare != $user) {
-                    $errors = $validator->validate($user);
-                    if (!count($errors) > 0) {
-                        $this->entityManager->persist($user);
-                        $this->entityManager->flush();
-                        return new JsonResponse(["success" => "L'utilisateur a bien été modifié"], 200);
-                    }
-
-                    $errorMessages = [];
-                    foreach ($errors as $error) {
-                        $errorMessages[] = $error->getMessage();
-                    }
-                    return new JsonResponse($errorMessages, 202);
-                }
-                return new JsonResponse(["Error" => "Aucun changement detecté"], 202);
-            }
-            return new JsonResponse(["Error" => "Accès refusé à cet utilisateur"], 403);
+        if (!$user) {
+            return new JsonResponse(["Error" => "L'utilisateur n'existe pas"], 404);
         }
-        return new JsonResponse(["error" => "L'utilisateur n'existe pas"], 404);
+        $this->denyAccessUnlessGranted('EDIT_USER', $user);
+
+        $this->deserializer->deserialize($request->getContent(), User::class, "json", [
+            'object_to_populate' => $user,
+        ]);
+
+        $errors = $validator->validate($user);
+        if (!count($errors) > 0) {
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+            $json = $this->serializer->serialize(["success" => "Modifications enregistrées", 'item' => $user], 'json');
+            return new Response($json, 200, array('Content-Type' => 'application/json'));
+        }
+        $json = $this->serializer->serialize(["errors" => $errors, 'item' => $user], 'json');
+        return new Response($json, 202, array('Content-Type' => 'application/json'));
     }
 
 
@@ -190,14 +183,12 @@ class UserController extends AbstractController
     public function delete(int $id, Request $request): Response
     {
         $user = $this->UserRepository->find($id);
-        if ($user) {
-            if ($this->isGranted('DELETE_USER', $user)) {
-                $this->entityManager->remove($user);
-                $this->entityManager->flush();
-                return new JsonResponse(["success" => "L'utilisateur a bien été supprimé"], 200);
-            }
-            return new JsonResponse(["Error" => "Accès refusé à cet utilisateur"], 403);
+        if (!$user) {
+            return new JsonResponse(["error" => "L'utilisateur n'existe pas"], 404);
         }
-        return new JsonResponse(["error" => "L'utilisateur n'existe pas"], 404);
+        $this->denyAccessUnlessGranted('DELETE_USER', $user);
+        $this->entityManager->remove($user);
+        $this->entityManager->flush();
+        return new JsonResponse(["success" => "L'utilisateur a bien été supprimé"], 200);
     }
 }
