@@ -8,6 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use Hateoas\Configuration\Annotation as Hateoas;
+use JMS\Serializer\Annotation\Groups;
 
 
 /**
@@ -30,12 +31,14 @@ class User
     /**
      * @ORM\Column(type="string", length=255)
      * @Expose
+     * @Groups({"in_documentation"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Expose
+     * @Groups({"in_documentation"})
      */
     private $lastname;
 
@@ -45,6 +48,7 @@ class User
      *     message = "The email {{ value }} is not a valid email."
      * )
      * @Expose
+     * @Groups({"in_documentation"})
      */
     private $email;
 

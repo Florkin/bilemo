@@ -7,12 +7,15 @@ use App\Repository\BrandRepository;
 use App\Repository\ProductRepository;
 use JMS\Serializer\SerializerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use OpenApi\Annotations as OA;
+use App\Entity\Product;
 
 /**
  * @Route("/api")
@@ -49,8 +52,33 @@ class ProductController extends AbstractController
      * @Route("/products", name="product_index", methods={"GET"}, options={"expose" = true})
      * @OA\Response(
      *     response=200,
-     *     description="Return first page of product list (Default: ?page=1&limit=12). Filter by brand by adding ?brand={brand_id}",
+     *     description="Return products list",
+     *     @Model(type=Product::class)
      * )
+     * @OA\Response(
+     *     response=404,
+     *     description="No product found"
+     * )
+     * @OA\Parameter(
+     *     name="limit",
+     *     in="query",
+     *     description="Number of items per page",
+     *     @OA\Schema(type="int")
+     * )
+     * @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="Page number to query",
+     *     @OA\Schema(type="int")
+     * )
+     * @OA\Parameter(
+     *     name="brand",
+     *     in="query",
+     *     description="Filter by brand ID",
+     *     @OA\Schema(type="int")
+     * )
+     * @OA\Tag(name="Products")
+     * @Security(name="Bearer")
      * @param Request $request
      * @param PaginatorInterface $pager
      * @param ApiPaginatorHandler $apiPaginatorHandler
@@ -78,8 +106,15 @@ class ProductController extends AbstractController
      * @param int $id
      * @OA\Response(
      *     response=200,
-     *     description="Return single product details from his ID",
+     *     description="Return product details",
+     *     @Model(type=Product::class)
      * )
+     * @OA\Response(
+     *     response=404,
+     *     description="No product found for this ID"
+     * )
+     * @OA\Tag(name="Products")
+     * @Security(name="Bearer")
      * @return Response
      */
     public function show(int $id): Response

@@ -4,15 +4,17 @@ namespace App\Controller\Api;
 
 use App\Handlers\ApiPaginatorHandler;
 use App\Repository\BrandRepository;
-use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use OpenApi\Annotations as OA;
+use App\Entity\Brand;
 
 /**
  * @Route("/api")
@@ -47,8 +49,27 @@ class BrandController extends AbstractController
      * @return Response
      * @OA\Response(
      *     response=200,
-     *     description="Return first page of brand list (Default: ?page=1&limit=12)",
+     *     description="Return brands list",
+     *     @Model(type=Brand::class)
      * )
+     * @OA\Response(
+     *     response=404,
+     *     description="No brand found",
+     * )
+     * @OA\Parameter(
+     *     name="limit",
+     *     in="query",
+     *     description="Number of items per page",
+     *     @OA\Schema(type="int")
+     * )
+     * @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="Page number to query",
+     *     @OA\Schema(type="int")
+     * )
+     * @OA\Tag(name="Brands")
+     * @Security(name="Bearer")
      */
     public function index(PaginatorInterface $pager, Request $request, ApiPaginatorHandler $apiPaginatorHandler): Response
     {
@@ -67,8 +88,15 @@ class BrandController extends AbstractController
      * @Route("/brands/{id}", name="brand_show", methods={"GET"}, options={"expose" = true})
      * @OA\Response(
      *     response=200,
-     *     description="Return single brand details from his ID",
+     *     description="Return brand details",
+     *     @Model(type=Brand::class)
      * )
+     * @OA\Response(
+     *     response=404,
+     *     description="Brand not found for this ID",
+     * )
+     * @OA\Tag(name="Brands")
+     * @Security(name="Bearer")
      * @param int $id
      * @return Response
      */

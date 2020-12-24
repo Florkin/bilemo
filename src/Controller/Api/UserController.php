@@ -8,9 +8,10 @@ use App\Handlers\Forms\FormErrorsHandler;
 use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -65,8 +66,18 @@ class UserController extends AbstractController
      * @return Response
      * @OA\Response(
      *     response=200,
-     *     description="Return first page of user list (Default: ?page=1&limit=12). Only users from your account.",
+     *     description="Return users list",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=User::class))
+     *     )
      * )
+     * @OA\Response(
+     *     response=404,
+     *     description="No user found",
+     * )
+     * @OA\Tag(name="Users")
+     * @Security(name="Bearer")
      */
     public function index(PaginatorInterface $pager, Request $request, ApiPaginatorHandler $apiPaginatorHandler): Response
     {
@@ -85,8 +96,27 @@ class UserController extends AbstractController
      * @Route("/users/{id}", name="user_show", methods={"GET"}, options={"expose" = true})
      * @OA\Response(
      *     response=200,
-     *     description="Return single user details.",
+     *     description="Return user details.",
+     *     @Model(type=User::class)
      * )
+     * @OA\Response(
+     *     response=404,
+     *     description="No user found with this ID",
+     * )
+     * @OA\Parameter(
+     *     name="Limit",
+     *     in="query",
+     *     description="Number of items per page",
+     *     @OA\Schema(type="int")
+     * )
+     * @OA\Parameter(
+     *     name="Page",
+     *     in="query",
+     *     description="Page number to query",
+     *     @OA\Schema(type="int")
+     * )
+     * @OA\Tag(name="Users")
+     * @Security(name="Bearer")
      * @param int $id
      * @return Response
      */
@@ -111,9 +141,15 @@ class UserController extends AbstractController
      * @param ClientRepository $clientRepository
      * @param ValidatorInterface $validator
      * @OA\Response(
-     *     response=200,
-     *     description="Add new user.",
+     *     response=201,
+     *     description="New user created",
      * )
+     * @OA\Response(
+     *     response=202,
+     *     description="Received data are not valid",
+     * )
+     * @OA\Tag(name="Users")
+     * @Security(name="Bearer")
      * @return Response
      */
     public function new(Request $request, ClientRepository $clientRepository, ValidatorInterface $validator): Response
@@ -127,7 +163,7 @@ class UserController extends AbstractController
             $this->entityManager->persist($user);
             $this->entityManager->flush();
             $json = $this->serializer->serialize(["success" => "Utilisateur enregistré", 'item' => $user], 'json');
-            return new Response($json, 200, array('Content-Type' => 'application/json'));
+            return new Response($json, 201, array('Content-Type' => 'application/json'));
         }
         $json = $this->serializer->serialize(["errors" => $errors], 'json');
         return new Response($json, 202, array('Content-Type' => 'application/json'));
@@ -141,8 +177,22 @@ class UserController extends AbstractController
      * @param ValidatorInterface $validator
      * @OA\Response(
      *     response=200,
-     *     description="Edit user with id_user = {id}.",
+     *     description="User modified successfully",
      * )
+     * @OA\Response(
+     *     response=202,
+     *     description="Received data are not valid",
+     * )
+     * @OA\Response(
+     *     response=403,
+     *     description="You have no right to access this user",
+     * )
+     * @OA\Response(
+     *     response=404,
+     *     description="No user found with this ID",
+     * )
+     * @OA\Tag(name="Users")
+     * @Security(name="Bearer")
      * @return Response
      */
     public function edit(int $id, Request $request, FormErrorsHandler $errorsHandler, ValidatorInterface $validator): Response
@@ -176,8 +226,18 @@ class UserController extends AbstractController
      * @param Request $request
      * @OA\Response(
      *     response=200,
-     *     description="Delete user with id_user = {id}.",
+     *     description="User deleted successfully",
      * )
+     * @OA\Response(
+     *     response=403,
+     *     description="You have no right to access this user",
+     * )
+     * @OA\Response(
+     *     response=404,
+     *     description="No user found with this ID",
+     * )
+     * @OA\Tag(name="Users")
+     * @Security(name="Bearer")
      * @return Response
      */
     public function delete(int $id, Request $request): Response
