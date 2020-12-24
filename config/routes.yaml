@@ -2,7 +2,17 @@ doc:
   path: /
   controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
   defaults:
-    route: doc_section_index
+    route: app.swagger_ui
+    # make a permanent redirection...
+    permanent: true
+    # ...and keep the original query string parameters
+    keepQueryParams: true
+
+old_doc_redir:
+  path: /documentation/
+  controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
+  defaults:
+    route: app.swagger_ui
     # make a permanent redirection...
     permanent: true
     # ...and keep the original query string parameters
