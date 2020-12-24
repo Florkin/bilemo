@@ -138,7 +138,6 @@ class UserController extends AbstractController
     /**
      * @Route("/users", name="user_new", methods={"POST"}, options={"expose" = true})
      * @param Request $request
-     * @param ClientRepository $clientRepository
      * @param ValidatorInterface $validator
      * @OA\Response(
      *     response=201,
@@ -148,11 +147,16 @@ class UserController extends AbstractController
      *     response=202,
      *     description="Received data are not valid",
      * )
+     * @OA\RequestBody(
+     *      @OA\JsonContent(
+     *          ref=@Model(type=User::class)
+     *      )
+     * )
      * @OA\Tag(name="Users")
      * @Security(name="Bearer")
      * @return Response
      */
-    public function new(Request $request, ClientRepository $clientRepository, ValidatorInterface $validator): Response
+    public function new(Request $request, ValidatorInterface $validator): Response
     {
         $user = $this->deserializer->deserialize($request->getContent(), User::class, "json");
         $user->setClient($this->getUser());
@@ -173,7 +177,6 @@ class UserController extends AbstractController
      * @Route("/users/{id}", name="user_edit", methods={"PATCH"}, options={"expose" = true})
      * @param int $id
      * @param Request $request
-     * @param FormErrorsHandler $errorsHandler
      * @param ValidatorInterface $validator
      * @OA\Response(
      *     response=200,
@@ -191,11 +194,16 @@ class UserController extends AbstractController
      *     response=404,
      *     description="No user found with this ID",
      * )
+     * @OA\RequestBody(
+     *      @OA\JsonContent(
+     *          ref=@Model(type=User::class)
+     *      )
+     * )
      * @OA\Tag(name="Users")
      * @Security(name="Bearer")
      * @return Response
      */
-    public function edit(int $id, Request $request, FormErrorsHandler $errorsHandler, ValidatorInterface $validator): Response
+    public function edit(int $id, Request $request, ValidatorInterface $validator): Response
     {
         $user = $this->UserRepository->find($id);
 
@@ -223,7 +231,6 @@ class UserController extends AbstractController
     /**
      * @Route("/users/{id}", name="delete_user", methods={"DELETE"}, options={"expose" = true})
      * @param int $id
-     * @param Request $request
      * @OA\Response(
      *     response=200,
      *     description="User deleted successfully",
@@ -240,7 +247,7 @@ class UserController extends AbstractController
      * @Security(name="Bearer")
      * @return Response
      */
-    public function delete(int $id, Request $request): Response
+    public function delete(int $id): Response
     {
         $user = $this->UserRepository->find($id);
         if (!$user) {

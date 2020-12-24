@@ -31,14 +31,14 @@ class User
     /**
      * @ORM\Column(type="string", length=255)
      * @Expose
-     * @Groups({"in_documentation"})
+     * @Groups({"request_body_documentation"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Expose
-     * @Groups({"in_documentation"})
+     * @Groups({"request_body_documentation"})
      */
     private $lastname;
 
@@ -48,7 +48,7 @@ class User
      *     message = "The email {{ value }} is not a valid email."
      * )
      * @Expose
-     * @Groups({"in_documentation"})
+     * @Groups({"request_body_documentation"})
      */
     private $email;
 
