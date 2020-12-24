@@ -24,7 +24,6 @@ class UserRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('u')
             ->where('u.client = ' . $clientId)
-            ->getQuery()
-            ->getResult();
+            ->getQuery();
     }
 }

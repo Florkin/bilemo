@@ -2,8 +2,11 @@
 
 namespace App\Controller\Api;
 
+use App\Handlers\ApiPaginatorHandler;
 use App\Repository\BrandRepository;
 use App\Repository\ProductRepository;
+use Hateoas\Representation\CollectionRepresentation;
+use Hateoas\Representation\PaginatedRepresentation;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -53,25 +56,21 @@ class ProductController extends AbstractController
      * )
      * @param Request $request
      * @param PaginatorInterface $pager
+     * @param ApiPaginatorHandler $apiPaginatorHandler
      * @return Response
      */
-    public function index(Request $request, PaginatorInterface $pager): Response
+    public function index(Request $request, PaginatorInterface $pager, ApiPaginatorHandler $apiPaginatorHandler): Response
     {
         $brandId = $request->query->get('brand');
         if (null != $brandId && null === $this->brandRepository->find($brandId)) {
             return new JsonResponse(["error" => "Cette marque n'existe pas"], 404);
         };
+        $query = $this->productRepository->findAllQueryBuilder($brandId);
+        $paginatedCollection = $apiPaginatorHandler->paginate($request, $query);
 
-        $page = $pager->paginate(
-            $this->productRepository->findAllQueryBuilder($brandId),
-            $request->query->getInt('page', 1),
-            $request->query->getInt('limit', 12)
-        );
-
-        if ($page->count() > 0) {
-            $context = SerializationContext::create()->setGroups(['list_product']);
-            $productsJSON = $this->serializer->serialize($page->getItems(), 'json', $context);
-            return new Response($productsJSON, 200, array('Content-Type' => 'application/json'));
+        if ($paginatedCollection) {
+            $json = $this->serializer->serialize($paginatedCollection, 'json');
+            return new Response($json, 200, array('Content-Type' => 'application/json'));
         }
 
         return new JsonResponse(["error" => "Il n'y a aucun produit"], 404);

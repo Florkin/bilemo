@@ -46,11 +46,12 @@ class ImageUrlSubscriber implements EventSubscriberInterface
 
     public function onPostSerialize(ObjectEvent $event)
     {
-        $context = $event->getContext()->getAttribute('groups');
-        if (
-            in_array('details_product', $context)
-            || in_array('list_product', $context)
-        ) {
+//        $context = $event->getContext()->getAttribute('groups');
+//
+//        if (
+//            in_array('details_product', $context)
+//            || in_array('list_product', $context)
+//        ) {
             $pictures = $event->getObject()->getPictures();
             $picturesPaths = [];
             foreach ($pictures as $picture) {
@@ -63,5 +64,5 @@ class ImageUrlSubscriber implements EventSubscriberInterface
             }
             $event->getVisitor()->visitProperty(new StaticPropertyMetadata ('', 'images', null), $picturesPaths);
         }
-    }
+//    }
 }
