@@ -5,7 +5,8 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 use Hateoas\Configuration\Annotation as Hateoas;
 
 
@@ -13,8 +14,8 @@ use Hateoas\Configuration\Annotation as Hateoas;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @Hateoas\Relation("_self",
  *      href = @Hateoas\Route("user_show", parameters = {"id" = "expr(object.getId())"}, absolute = true),
- *      exclusion = @Hateoas\Exclusion(groups={"list_user", "details_user"})
  * )
+ * @ExclusionPolicy("all")
  */
 class User
 {
@@ -22,19 +23,19 @@ class User
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"list_user", "details_user"})
+     * @Expose
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"list_user", "details_user"})
+     * @Expose
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"list_user", "details_user"})
+     * @Expose
      */
     private $lastname;
 
@@ -43,7 +44,7 @@ class User
      * @Assert\Email(
      *     message = "The email '{{ value }}' is not a valid email."
      * )
-     * @Groups({"list_user", "details_user"})
+     * @Expose
      */
     private $email;
 

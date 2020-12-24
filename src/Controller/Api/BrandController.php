@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api;
 
+use App\Handlers\ApiPaginatorHandler;
 use App\Repository\BrandRepository;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
@@ -42,24 +43,21 @@ class BrandController extends AbstractController
      * @Route("/brands", name="brand_index", methods={"GET"}, options={"expose" = true})
      * @param PaginatorInterface $pager
      * @param Request $request
+     * @param ApiPaginatorHandler $apiPaginatorHandler
+     * @return Response
      * @OA\Response(
      *     response=200,
      *     description="Return first page of brand list (Default: ?page=1&limit=12)",
      * )
-     * @return Response
      */
-    public function index(PaginatorInterface $pager, Request $request): Response
+    public function index(PaginatorInterface $pager, Request $request, ApiPaginatorHandler $apiPaginatorHandler): Response
     {
-        $page = $pager->paginate(
-            $this->brandRepository->findAll(),
-            $request->query->getInt('page', 1),
-            $request->query->getInt('limit', 12)
-        );
+        $query = $this->brandRepository->findAllQueryBuilder();
+        $paginatedCollection = $apiPaginatorHandler->paginate($request, $query);
 
-        if ($page->count() > 0) {
-            $context = SerializationContext::create()->setGroups(['list_brand']);
-            $brandsJSON = $this->serializer->serialize($page->getItems(), 'json', $context);
-            return new Response($brandsJSON, 200, array('Content-Type' => 'application/json'));
+        if ($paginatedCollection) {
+            $json = $this->serializer->serialize($paginatedCollection, 'json');
+            return new Response($json, 200, array('Content-Type' => 'application/json'));
         }
 
         return new JsonResponse(["error" => "Il n'y a aucune marque"], 404);
@@ -79,8 +77,7 @@ class BrandController extends AbstractController
         $brand = $this->brandRepository->find($id);
 
         if ($brand) {
-            $context = SerializationContext::create()->setGroups(['details_brand']);
-            $brandJSON = $this->serializer->serialize($brand, 'json', $context);
+            $brandJSON = $this->serializer->serialize($brand, 'json');
             return new Response($brandJSON, 200, array('Content-Type' => 'application/json'));
         }
 

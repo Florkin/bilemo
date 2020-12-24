@@ -42,10 +42,10 @@ class ApiPaginatorHandler
                 array(), // route parameters
                 $page->getCurrentPageNumber(),       // page number
                 $page->getItemNumberPerPage(),      // limit
-                $page->count(),       // total pages
+                ceil($page->getTotalItemCount() / $page->getItemNumberPerPage()),       // total pages
                 'page',  // page route parameter name, optional, defaults to 'page'
                 'limit', // limit route parameter name, optional, defaults to 'limit'
-                false,   // generate relative URIs, optional, defaults to `false`
+                true,   // generate relative URIs, optional, defaults to `false`
                 $page->getTotalItemCount()       // total collection size, optional, defaults to `null`
             );
         }

@@ -5,9 +5,6 @@ namespace App\Controller\Api;
 use App\Handlers\ApiPaginatorHandler;
 use App\Repository\BrandRepository;
 use App\Repository\ProductRepository;
-use Hateoas\Representation\CollectionRepresentation;
-use Hateoas\Representation\PaginatedRepresentation;
-use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -90,8 +87,7 @@ class ProductController extends AbstractController
         $product = $this->productRepository->find($id);
 
         if ($product) {
-            $context = SerializationContext::create()->setGroups(['details_product']);
-            $productJSON = $this->serializer->serialize($product, 'json', $context);
+            $productJSON = $this->serializer->serialize($product, 'json');
             return new Response($productJSON, 200, array('Content-Type' => 'application/json'));
         }
 

@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\User;
+use App\Handlers\ApiPaginatorHandler;
 use App\Handlers\Forms\FormErrorsHandler;
 use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
@@ -60,24 +61,21 @@ class UserController extends AbstractController
      * @Route("/users", name="user_index", methods={"GET"}, options={"expose" = true})
      * @param PaginatorInterface $pager
      * @param Request $request
+     * @param ApiPaginatorHandler $apiPaginatorHandler
+     * @return Response
      * @OA\Response(
      *     response=200,
      *     description="Return first page of user list (Default: ?page=1&limit=12). Only users from your account.",
      * )
-     * @return Response
      */
-    public function index(PaginatorInterface $pager, Request $request): Response
+    public function index(PaginatorInterface $pager, Request $request, ApiPaginatorHandler $apiPaginatorHandler): Response
     {
-        $page = $pager->paginate(
-            $this->UserRepository->findUsersFromClientId($this->getUser()->getId()),
-            $request->query->getInt('page', 1),
-            $request->query->getInt('limit', 12)
-        );
+        $query = $this->UserRepository->findUsersFromClientId($this->getUser()->getId());
+        $paginatedCollection = $apiPaginatorHandler->paginate($request, $query);
 
-        if ($page->count() > 0) {
-            $context = SerializationContext::create()->setGroups(['list_user']);
-            $usersJSON = $this->serializer->serialize($page->getItems(), 'json', $context);
-            return new Response($usersJSON, 200, array('Content-Type' => 'application/json'));
+        if ($paginatedCollection) {
+            $json = $this->serializer->serialize($paginatedCollection, 'json');
+            return new Response($json, 200, array('Content-Type' => 'application/json'));
         }
 
         return new JsonResponse(["error" => "Il n'y a aucun utilisateur"], 404);
@@ -98,8 +96,7 @@ class UserController extends AbstractController
 
         if ($user) {
             if ($this->isGranted('SHOW_USER', $user)) {
-                $context = SerializationContext::create()->setGroups(['details_user']);
-                $userJSON = $this->serializer->serialize($user, 'json', $context);
+                $userJSON = $this->serializer->serialize($user, 'json');
                 return new Response($userJSON, 200, array('Content-Type' => 'application/json'));
             }
             return new JsonResponse(["Error" => "Accès refusé à cet utilisateur"], 403);

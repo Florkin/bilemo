@@ -7,15 +7,19 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
  * @Hateoas\Relation("_self",
  *      href = @Hateoas\Route("product_show", parameters = {"id" = "expr(object.getId())"}, absolute = true),
- *      exclusion = @Hateoas\Exclusion(groups={"list_product", "details_product"})
  * )
+ * @Hateoas\Relation("Brand",
+ *      href = @Hateoas\Route("brand_show", parameters = {"id" = "expr(object.getBrand().getId())"}, absolute = true),
+ * )
+ * @ExclusionPolicy("all")
  */
 class Product
 {
@@ -23,32 +27,31 @@ class Product
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"list_product", "details_product", "details_brand"})
+     * @Expose
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"list_product", "details_product", "details_brand"})
+     * @Expose
      */
     private $name;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"list_product", "details_product", "details_brand"})
+     * @Expose
      */
     private $description;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"list_product", "details_product", "details_brand"})
+     * @Expose
      */
     private $price;
 
     /**
      * @ORM\ManyToOne(targetEntity=Brand::class, inversedBy="Products")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"list_product", "details_product"})
      */
     private $brand;
 

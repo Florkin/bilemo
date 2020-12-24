@@ -6,7 +6,8 @@ use App\Repository\BrandRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 use Hateoas\Configuration\Annotation as Hateoas;
 
 
@@ -14,12 +15,11 @@ use Hateoas\Configuration\Annotation as Hateoas;
  * @ORM\Entity(repositoryClass=BrandRepository::class)
  * @Hateoas\Relation("_self",
  *      href = @Hateoas\Route("brand_show", parameters = {"id" = "expr(object.getId())"}, absolute = true),
- *      exclusion = @Hateoas\Exclusion(groups={"list_brand", "details_brand"})
  * )
  * @Hateoas\Relation("_products",
  *      href = @Hateoas\Route("product_index", parameters = {"brand" = "expr(object.getId())"}, absolute = true),
- *      exclusion = @Hateoas\Exclusion(groups={"list_brand", "details_brand"})
  * )
+ * @ExclusionPolicy("all")
  */
 class Brand
 {
@@ -27,19 +27,19 @@ class Brand
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"list_product", "details_product", "list_brand", "details_brand"})
+     * @Expose
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"list_product", "details_product", "list_brand", "details_brand"})
+     * @Expose
      */
     private $name;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"list_brand", "details_brand"})
+     * @Expose
      */
     private $description;
 
