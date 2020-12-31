@@ -24,7 +24,6 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/app.js')
-    .addEntry('markdownEditor', './assets/markdownEditor.js')
     .addEntry('dropzone', './assets/dropzone.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.

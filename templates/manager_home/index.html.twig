@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ManagerHomeController!{% endblock %}
+
+{% block body %}
+	
+	<div class="container">
+		<div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 90vh">
+			<h1>Bienvenue dans le back-office de BileMo</h1>
+			
+			<p>Dans cette section, vous pouvez administrer les produits et marques de BileMo qui seront mis a
+				disposition sur l'API.</p>
+			
+			<div class="row mt-4">
+				<div class="col-12 col-md-6">
+					<a href="{{ path('manage_product_index') }}" class="btn btn-lg btn-primary h-100">Administrer les
+						produits
+					</a>
+				</div>
+				<div class="col-12 col-md-6">
+					<a href="{{ path('manage_brand_index') }}" class="btn btn-lg btn-primary h-100">Administrer les marques
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
