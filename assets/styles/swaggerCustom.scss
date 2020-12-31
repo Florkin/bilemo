@@ -1,0 +1,22 @@
+header {
+  &:before {
+    display: none;
+  }
+}
+
+.swagger-ui {
+  .auth-wrapper {
+    justify-content: space-between;
+    align-items: center;
+
+    .btn.authorize {
+      height: 70px;
+    }
+
+    .new-wrapper {
+      .custom-paragraph {
+        line-height: 24px;
+      }
+    }
+  }
+}
