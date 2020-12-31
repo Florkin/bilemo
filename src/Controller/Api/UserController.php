@@ -76,6 +76,18 @@ class UserController extends AbstractController
      *     response=404,
      *     description="No user found",
      * )
+     * @OA\Parameter(
+     *     name="Limit",
+     *     in="query",
+     *     description="Number of items per page",
+     *     @OA\Schema(type="int")
+     * )
+     * @OA\Parameter(
+     *     name="Page",
+     *     in="query",
+     *     description="Page number to query",
+     *     @OA\Schema(type="int")
+     * )
      * @OA\Tag(name="Users")
      * @Security(name="Bearer")
      */
@@ -102,18 +114,6 @@ class UserController extends AbstractController
      * @OA\Response(
      *     response=404,
      *     description="No user found with this ID",
-     * )
-     * @OA\Parameter(
-     *     name="Limit",
-     *     in="query",
-     *     description="Number of items per page",
-     *     @OA\Schema(type="int")
-     * )
-     * @OA\Parameter(
-     *     name="Page",
-     *     in="query",
-     *     description="Page number to query",
-     *     @OA\Schema(type="int")
      * )
      * @OA\Tag(name="Users")
      * @Security(name="Bearer")
