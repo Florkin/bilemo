@@ -14,9 +14,11 @@
 ``php bin/console doctrine:database:create``  
 ``php bin/console doctrine:fixtures:load``
 
-7) To access admin panel, /manager  
+7) To access admin panel, go to: /manager  
 ``email: "admin@demo.fr"
-pass: "demodemo"``
+pass: "demodemo"`` 
+Don't forget to build the assets:  
+``yarn install``, ``yarn encore production``
 
 8) To test API as a client:  
 ``email: "client@demo.fr"
