@@ -13,14 +13,13 @@
 6) Create and fill database with:  
 ``php bin/console doctrine:database:create``  
 ``php bin/console doctrine:fixtures:load``
-7) Nelmio doc is generated in /api/doc, but I made a nicer documentation on /documentation. 
-To get this doc's data on your install, import _/sql/documentation.sql
-If you just wanna see it, just go to http://bilemo.tristan-florin.fr/documentation/
 
-8) To access admin panel, http://bilemo.tristan-florin.fr/login 
+7) To access admin panel, http://bilemo.tristan-florin.fr/login 
 email: "admin@demo.fr"
 pass: "demodemo"
 
-9) To test API as a client:
+8) To test API as a client:
 email: "client@demo.fr"
 pass: "demodemo"
+
+Api documentation is generated on : /api/doc
