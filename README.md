@@ -11,15 +11,18 @@
 5) Now, you have to copy the choosen passphrase in .env, or.env.local like this: ``JWT_PASSPHRASE="YOUR_PASSPHRASE"``
 6) Create and fill database with:  
 ``php bin/console doctrine:database:create``  
-``php bin/console doctrine:fixtures:load``
+``php bin/console doctrine:schema:update --force``  
+``php bin/console doctrine:fixtures:load``  
 
-7) To access admin panel, go to: /manager  
+7) Run tests: ``php bin/phpunit``
+
+8) To access admin panel, go to: /manager  
 ``email: "admin@demo.fr"
 pass: "demodemo"``  
 Don't forget to build the assets:   
 ``yarn install``, ``yarn encore production``
 
-8) To test API as a client:  
+9) To test API as a client:  
 ``email: "client@demo.fr"
 pass: "demodemo"``
 
