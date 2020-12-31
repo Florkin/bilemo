@@ -14,7 +14,7 @@
 ``php bin/console doctrine:database:create``  
 ``php bin/console doctrine:fixtures:load``
 
-7) To access admin panel, http://bilemo.tristan-florin.fr/login 
+7) To access admin panel, /manager 
 email: "admin@demo.fr"
 pass: "demodemo"
 
