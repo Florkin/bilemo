@@ -23,7 +23,7 @@ Don't forget to build the assets:
 ``yarn install``, ``yarn encore production``
 
 9) To test API as a client:  
-``email: "client@demo.fr"
+``username: "client@demo.fr"
 pass: "demodemo"``
 
 Api documentation is generated on : /api/doc
