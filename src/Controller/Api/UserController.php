@@ -20,6 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface as SymfonySerializer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use OpenApi\Annotations as OA;
+use Hateoas\Representation\PaginatedRepresentation;
 
 /**
  * @Route("/api")
@@ -67,10 +68,8 @@ class UserController extends AbstractController
      * @OA\Response(
      *     response=200,
      *     description="Return users list",
-     *     @OA\JsonContent(
-     *        type="array",
-     *        @OA\Items(ref=@Model(type=User::class))
-     *     )
+     *     @Model(type=PaginatedRepresentation::class)
+
      * )
      * @OA\Response(
      *     response=404,
