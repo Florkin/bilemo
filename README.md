@@ -14,11 +14,11 @@
 ``php bin/console doctrine:database:create``  
 ``php bin/console doctrine:fixtures:load``
 
-7) To access admin panel, /manager 
+7) To access admin panel, /manager  
 ``email: "admin@demo.fr"
 pass: "demodemo"``
 
-8) To test API as a client:
+8) To test API as a client:  
 ``email: "client@demo.fr"
 pass: "demodemo"``
 
